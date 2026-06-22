@@ -1,9 +1,15 @@
 <?php
 
+
+if (defined('DB_INITIALIZED')) {
+  return;
+}
+define('DB_INITIALIZED', true);
+
 $dbHost = 'localhost';
-$dbUser = 'root';
-$dbPassword = '';
-$dbName = 'asclepius_db';
+$dbUser = 'u805024096_asclepius';
+$dbPassword = 'Asclepius-123';
+$dbName = 'u805024096_asclepius';
 
 $conn = new mysqli($dbHost, $dbUser, $dbPassword);
 
@@ -12,7 +18,6 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset('utf8mb4');
-$conn->query("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 $conn->select_db($dbName);
 
 $schemaStatements = [
@@ -207,6 +212,11 @@ $upgradeColumns = [
   "weight VARCHAR(50)",
   "allergies VARCHAR(255)"
 ];
-foreach ($upgradeColumns as $columnDefinition) {
-  $conn->query("ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS $columnDefinition");
+
+if (!isset($_GET['setup'])) {
+  
+} else {
+  foreach ($upgradeColumns as $columnDefinition) {
+    $conn->query("ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS $columnDefinition");
+  }
 }
